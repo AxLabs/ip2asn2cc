@@ -1,0 +1,24 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+dependencies {
+
+    compile 'commons-io:commons-io:2.5'
+    compile 'commons-net:commons-net:3.5'
+    compile 'commons-validator:commons-validator:1.5.1'
+    compile 'com.googlecode.java-ipv6:java-ipv6:0.16'
+
+    compile 'ch.qos.logback:logback-classic:1.2.3'
+
+    testCompile 'junit:junit:4.12'
+}
