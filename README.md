@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/axlabs-team/ip2asn2cc.svg?branch=master)](https://travis-ci.org/axlabs-team/ip2asn2cc) [![Coverage Status](https://coveralls.io/repos/github/axlabs-team/ip2asn2cc/badge.svg?branch=master)](https://coveralls.io/github/axlabs-team/ip2asn2cc?branch=master)
+
 # IP2ASN2CC
 
 This Java library primarily provides a way to check if an **IP** address or **ASN** (Autonomous System Number) is 
