@@ -168,3 +168,5 @@ gradle-app.setting
 # End of https://www.gitignore.io/api/java,gradle,eclipse,intellij
 
 .idea/
+gradle.properties
+**/gradle.properties
