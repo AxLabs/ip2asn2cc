@@ -2,6 +2,8 @@ plugins {
     id 'java-library'
     id 'jacoco'
     id 'com.github.kt3k.coveralls' version '2.6.3'
+    id 'com.bmuschko.nexus' version '2.3.1'
+    id 'io.codearte.nexus-staging' version '0.11.0'
 }
 
 repositories {
@@ -12,6 +14,10 @@ repositories {
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
+
+group = 'com.axlabs'
+archivesBaseName = 'ip2asn2cc'
+version = '0.0.1'
 
 dependencies {
 
@@ -38,4 +44,43 @@ jacocoTestReport {
         html.enabled = true
         csv.enabled = false
     }
+}
+
+modifyPom {
+    project {
+        name 'IP2ASN2CC'
+        description 'Java library to check whether an IP address or ASN is registered in a country.'
+        url 'https://github.com/axlabs-team/ip2asn2cc'
+        inceptionYear '2015'
+        scm {
+            url 'https://github.com/axlabs-team/ip2asn2cc'
+            connection 'scm:https://bitbucket.org/objdict/objjson.git'
+            developerConnection 'scm:https://github.com/axlabs-team/ip2asn2cc.git'
+        }
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+        developers {
+            developer {
+                id 'gsmachado'
+                name 'gsmachado'
+                email 'guil@axlabs.com'
+            }
+        }
+    }
+}
+extraArchive {
+    sources = true
+    tests = true
+    javadoc = true
+}
+
+nexus {
+    sign = true
+    repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
 }
