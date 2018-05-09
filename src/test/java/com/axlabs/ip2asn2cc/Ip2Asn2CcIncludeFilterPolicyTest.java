@@ -19,7 +19,7 @@ public class Ip2Asn2CcIncludeFilterPolicyTest {
     public static void initialize() throws RIRNotDownloadedException {
         List<String> listCountryCode = new ArrayList<String>();
         listCountryCode.add("US");
-        ip2Asn2Cc = new Ip2Asn2Cc(listCountryCode, FilterPolicy.INCLUDE_COUNTRY_CODES);
+        ip2Asn2Cc = new Ip2Asn2Cc(listCountryCode);
     }
 
     @Test
