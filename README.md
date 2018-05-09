@@ -15,6 +15,26 @@ The library parses all the [RIR (Regional Internet Registry)](https://en.wikiped
 follows the [RIR statistics exchange format](https://www.apnic.net/about-apnic/corporate-documents/documents/resource-guidelines/rir-statistics-exchange-format/). 
 Therefore, it ensures that if an IP or ASN is published by a RIR (e.g., APNIC, ), then the IP2ASN2CC is able to find and correctly match IP/ASN to the respective country code.
 
+## Use
+
+Maven:
+
+```
+<dependency>
+    <groupId>com.axlabs</groupId>
+    <artifactId>ip2asn2cc</artifactId>
+    <version>0.0.1</version>
+</dependency>
+```
+
+Gradle:
+
+```
+compile 'com.axlabs:ip2asn2cc:0.0.1'
+```
+
+> **IMPORTANT**: make sure that your project is using the Maven Central repository. Check more info on how to include it on [here](https://docs.gradle.org/current/userguide/dependency_management_for_java_projects.html) (Gradle) and [here](https://maven.apache.org/guides/introduction/introduction-to-repositories.html) (Maven). 
+
 # License
 
 ```
