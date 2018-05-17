@@ -54,7 +54,7 @@ modifyPom {
         inceptionYear '2015'
         scm {
             url 'https://github.com/axlabs-team/ip2asn2cc'
-            connection 'scm:https://bitbucket.org/objdict/objjson.git'
+            connection 'scm:https://github.com/axlabs-team/ip2asn2cc.git'
             developerConnection 'scm:https://github.com/axlabs-team/ip2asn2cc.git'
         }
         licenses {
