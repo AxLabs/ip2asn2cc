@@ -20,6 +20,39 @@
 - **Passing Tests**: 94
 - **Integration Tests (require network)**: 2 (currently skipped in CI)
 
+## Network Access and Integration Tests
+
+### Why Integration Tests Don't Run in CI
+
+While the test environment has internet access for downloading build dependencies (Maven Central, Gradle plugins), **DNS resolution for external hosts is blocked** for security reasons. This is a common practice in CI/CD environments.
+
+**Specific limitation:**
+- ✅ Can download from: `repo1.maven.org`, `plugins.gradle.org`
+- ❌ Cannot resolve: `ftp.arin.net`, `ftp.ripe.net`, `ftp.apnic.net`, `ftp.afrinic.net`, `ftp.lacnic.net`
+
+**Error encountered:**
+```java
+java.net.UnknownHostException: ftp.arin.net
+```
+
+### Running Integration Tests Manually
+
+If you have unrestricted network access, you can run the integration tests:
+
+```bash
+# Run specific integration test
+./gradlew test --tests "com.axlabs.ip2asn2cc.Ip2Asn2CcIncludeFilterPolicyTest"
+./gradlew test --tests "com.axlabs.ip2asn2cc.Ip2Asn2CcExcludeFilterPolicyTest"
+```
+
+These tests will:
+1. Download ~200MB of RIR databases from 5 FTP servers (ARIN, RIPE, AFRINIC, APNIC, LACNIC)
+2. Parse the databases to extract IP/ASN to country mappings
+3. Verify IP address and ASN lookups work correctly
+4. Take several minutes to complete
+
+**Note**: These are true integration tests that test the entire system end-to-end, including network access, FTP downloads, and data parsing.
+
 ## Running Tests
 
 ### Run all tests with coverage report
