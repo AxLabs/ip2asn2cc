@@ -149,10 +149,14 @@ public class Ip2Asn2Cc {
 
     private void deleteFiles() {
         try {
-            this.listDownloadedFiles.stream().forEach((file) -> file.delete());
+            this.listDownloadedFiles.forEach((file) -> {
+                if (!file.delete()) {
+                    LOG.warn("Failed to delete temp file: {}", file.getAbsolutePath());
+                }
+            });
             LOG.debug("Deleted temp files.");
         } catch (final Exception e) {
-            LOG.error("Problem deleting temp files.");
+            LOG.error("Problem deleting temp files.", e);
         }
     }
 
