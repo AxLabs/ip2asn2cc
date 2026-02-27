@@ -6,18 +6,18 @@ import java.util.Set;
 
 public class ASNChecker implements ASNCheckerInterface {
 
-    private Set<String> asns = Collections.synchronizedSet(new HashSet<String>());
+    private final Set<String> asns = Collections.synchronizedSet(new HashSet<String>());
 
     public ASNChecker() {
     }
 
     @Override
-    public boolean checkIfMatches(String asn) {
+    public boolean checkIfMatches(final String asn) {
         return this.asns.contains(asn);
     }
 
     @Override
-    public void addASN(String asn) {
+    public void addASN(final String asn) {
         this.asns.add(asn);
     }
 

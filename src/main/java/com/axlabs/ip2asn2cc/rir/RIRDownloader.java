@@ -14,10 +14,10 @@ public class RIRDownloader implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(RIRDownloader.class);
 
-    private List<File> listDownloadedFiles;
-    private String urlToDownload;
+    private final List<File> listDownloadedFiles;
+    private final String urlToDownload;
 
-    public RIRDownloader(List<File> listDownloadedFiles, String urlToDownload) {
+    public RIRDownloader(final List<File> listDownloadedFiles, final String urlToDownload) {
         this.listDownloadedFiles = listDownloadedFiles;
         this.urlToDownload = urlToDownload;
     }
@@ -25,20 +25,21 @@ public class RIRDownloader implements Runnable {
     @Override
     public void run() {
         try {
-            File fileDownloaded = download(this.urlToDownload);
+            final File fileDownloaded = download(this.urlToDownload);
             this.listDownloadedFiles.add(fileDownloaded);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Error downloading the RIR file from URL (" + this.urlToDownload + ").", e);
         }
     }
 
-    private File download(String urlString) throws Exception {
-        URL url = new URL(urlString);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-        File tempFile = File.createTempFile("ip2asn2cc-", ".db");
-        FileOutputStream fos = new FileOutputStream(tempFile);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        LOG.debug("Downloaded RIR file: {}", urlString);
-        return tempFile;
+    private File download(final String urlString) throws Exception {
+        final URL url = new URL(urlString);
+        final File tempFile = File.createTempFile("ip2asn2cc-", ".db");
+        try (final ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+             final FileOutputStream fos = new FileOutputStream(tempFile)) {
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+            LOG.debug("Downloaded RIR file: {}", urlString);
+            return tempFile;
+        }
     }
 }

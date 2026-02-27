@@ -8,14 +8,14 @@ public class IPv4Subnet extends IPSubnet {
     // * address: address (e.g., 192.168.0.0)
     // * amountOfAddresses: amount of addresses (e.g., 524288 -- which means /13)
 
-    private Integer amountOfAddresses;
-    private String countryCode;
+    private final Integer amountOfAddresses;
+    private final String countryCode;
 
-    public IPv4Subnet(String address, Integer amountOfAddresses) {
+    public IPv4Subnet(final String address, final Integer amountOfAddresses) {
         this(address, amountOfAddresses, null);
     }
 
-    public IPv4Subnet(String address, Integer amountOfAddresses, String countryCode) {
+    public IPv4Subnet(final String address, final Integer amountOfAddresses, final String countryCode) {
         super(address);
         this.amountOfAddresses = amountOfAddresses;
         this.countryCode = countryCode;

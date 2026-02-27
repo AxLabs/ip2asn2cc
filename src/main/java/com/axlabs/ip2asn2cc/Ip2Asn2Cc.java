@@ -30,36 +30,36 @@ public class Ip2Asn2Cc {
 
     // The following RIR DBs have the format described here:
     // https://www.apnic.net/about-APNIC/corporate-documents/documents/resource-guidelines/rir-statistics-exchange-format
-    private final static String ARIN_RIR_DB_URL = "ftp://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest";
-    private final static String RIPE_RIR_DB_URL = "ftp://ftp.ripe.net/ripe/stats/delegated-ripencc-latest";
-    private final static String AFRINIC_RIR_DB_URL = "ftp://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-latest";
-    private final static String APNIC_RIR_DB_URL = "ftp://ftp.apnic.net/pub/stats/apnic/delegated-apnic-latest";
-    private final static String LACNIC_RIR_DB_URL = "ftp://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-latest";
+    private static final String ARIN_RIR_DB_URL = "ftp://ftp.arin.net/pub/stats/arin/delegated-arin-extended-latest";
+    private static final String RIPE_RIR_DB_URL = "ftp://ftp.ripe.net/ripe/stats/delegated-ripencc-latest";
+    private static final String AFRINIC_RIR_DB_URL = "ftp://ftp.afrinic.net/pub/stats/afrinic/delegated-afrinic-latest";
+    private static final String APNIC_RIR_DB_URL = "ftp://ftp.apnic.net/pub/stats/apnic/delegated-apnic-latest";
+    private static final String LACNIC_RIR_DB_URL = "ftp://ftp.lacnic.net/pub/stats/lacnic/delegated-lacnic-latest";
 
-    private final static List<String> listAllRIR = Arrays.asList(
+    private static final List<String> listAllRIR = Arrays.asList(
             ARIN_RIR_DB_URL, RIPE_RIR_DB_URL,
             AFRINIC_RIR_DB_URL, APNIC_RIR_DB_URL,
             LACNIC_RIR_DB_URL);
 
-    private InetAddressValidator validator;
+    private final InetAddressValidator validator;
 
-    private IPv4Checker ipv4Checker;
-    private IPv6Checker ipv6Checker;
-    private ASNChecker asnChecker;
+    private final IPv4Checker ipv4Checker;
+    private final IPv6Checker ipv6Checker;
+    private final ASNChecker asnChecker;
 
-    private List<File> listDownloadedFiles = Collections.synchronizedList(new ArrayList<File>());
-    private Config config;
+    private final List<File> listDownloadedFiles = Collections.synchronizedList(new ArrayList<File>());
+    private final Config config;
 
-    public Ip2Asn2Cc(List<String> listCountryCodeRules) throws RIRNotDownloadedException {
+    public Ip2Asn2Cc(final List<String> listCountryCodeRules) throws RIRNotDownloadedException {
         this(listCountryCodeRules, FilterPolicy.INCLUDE_COUNTRY_CODES, true, true);
     }
 
-    public Ip2Asn2Cc(List<String> listCountryCodeRules, FilterPolicy filterPolicy) throws RIRNotDownloadedException {
+    public Ip2Asn2Cc(final List<String> listCountryCodeRules, final FilterPolicy filterPolicy) throws RIRNotDownloadedException {
         this(listCountryCodeRules, filterPolicy, true, true);
     }
 
-    public Ip2Asn2Cc(List<String> listCountryCodeRules, FilterPolicy filterPolicy,
-                     Boolean includeIpv4LocalAddresses, Boolean includeIpv6LocalAddresses) throws RIRNotDownloadedException {
+    public Ip2Asn2Cc(final List<String> listCountryCodeRules, final FilterPolicy filterPolicy,
+                     final Boolean includeIpv4LocalAddresses, final Boolean includeIpv6LocalAddresses) throws RIRNotDownloadedException {
 
         this.config = new Config(filterPolicy, includeIpv4LocalAddresses, includeIpv6LocalAddresses);
         this.validator = new InetAddressValidator();
@@ -71,23 +71,23 @@ public class Ip2Asn2Cc {
         deleteFiles();
     }
 
-    public synchronized boolean checkIP(String ipAddress) {
+    public synchronized boolean checkIP(final String ipAddress) {
         LOG.debug("Check for: " + ipAddress);
         return ofNullable(ipAddress)
                 .filter((address) -> validator.isValid(address))
-                .map((address) -> new Boolean(this.ipv4Checker.checkIfIsInRange(address) || this.ipv6Checker.checkIfIsInRange(address)))
+                .map((address) -> this.ipv4Checker.checkIfIsInRange(address) || this.ipv6Checker.checkIfIsInRange(address))
                 .map((checkResult) -> (this.config.getFilterPolicy() == FilterPolicy.INCLUDE_COUNTRY_CODES) ? checkResult : !checkResult)
                 .orElse(false);
     }
 
-    public synchronized boolean checkASN(String asn) {
+    public synchronized boolean checkASN(final String asn) {
         LOG.debug("Check for: " + asn);
         return ofNullable(asn).map((asnAddress) -> this.asnChecker.checkIfMatches(asnAddress))
                 .map((checkResult) -> (this.config.getFilterPolicy() == FilterPolicy.INCLUDE_COUNTRY_CODES) ? checkResult : !checkResult)
                 .orElse(false);
     }
 
-    public synchronized String getRIRCountryCode(String ipAddress) {
+    public synchronized String getRIRCountryCode(final String ipAddress) {
         LOG.debug("Get RIR country code for: " + ipAddress);
         return ofNullable(ipAddress)
                 .filter((address) -> validator.isValid(address))
@@ -96,9 +96,9 @@ public class Ip2Asn2Cc {
                 .orElse(null);
     }
 
-    private void parseAllCountryCodes(List<String> listCountryCode) {
+    private void parseAllCountryCodes(final List<String> listCountryCode) {
 
-        ExecutorService parserPool = Executors.newFixedThreadPool(6);
+        final ExecutorService parserPool = Executors.newFixedThreadPool(6);
         this.listDownloadedFiles.forEach((file) -> {
             parserPool.submit(new RIRParser(this.ipv4Checker, this.ipv6Checker, this.asnChecker, file, listCountryCode));
         });
@@ -107,19 +107,19 @@ public class Ip2Asn2Cc {
 
         try {
             parserPool.awaitTermination(5, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             LOG.error("The pool to parse the RIR files was interrupted before termination.", e);
         }
 
         if (this.config.getIncludeIpv4LocalAddresses()) {
             // add local addresses as well:
             // 127.0.0.0/8 defined in https://tools.ietf.org/html/rfc3330
-            IPv4Subnet localhostIPv4 = new IPv4Subnet("127.0.0.0", 16777214);
+            final IPv4Subnet localhostIPv4 = new IPv4Subnet("127.0.0.0", 16777214);
             ipv4Checker.addSubnet(localhostIPv4);
         }
         if (this.config.getIncludeIpv6LocalAddresses()) {
             // ::1/128 defined in https://tools.ietf.org/html/rfc4291
-            IPv6Subnet localhostIPv6 = new IPv6Subnet("0:0:0:0:0:0:0:1", 128);
+            final IPv6Subnet localhostIPv6 = new IPv6Subnet("0:0:0:0:0:0:0:1", 128);
             ipv6Checker.addSubnet(localhostIPv6);
         }
 
@@ -127,9 +127,9 @@ public class Ip2Asn2Cc {
     }
 
     private void downloadListUrl() throws RIRNotDownloadedException {
-        ExecutorService downloadRIRPool = Executors.newFixedThreadPool(6);
+        final ExecutorService downloadRIRPool = Executors.newFixedThreadPool(6);
 
-        for (String urlString : this.listAllRIR) {
+        for (final String urlString : listAllRIR) {
             downloadRIRPool.submit(new RIRDownloader(this.listDownloadedFiles, urlString));
         }
 
@@ -137,21 +137,21 @@ public class Ip2Asn2Cc {
 
         try {
             downloadRIRPool.awaitTermination(5, TimeUnit.MINUTES);
-        } catch (InterruptedException e) {
+        } catch (final InterruptedException e) {
             LOG.error("The pool to download the RIR files was interrupted before termination.", e);
         }
 
-        if (this.listDownloadedFiles.size() != this.listAllRIR.size()) {
+        if (this.listDownloadedFiles.size() != listAllRIR.size()) {
             throw new RIRNotDownloadedException("Just " + this.listDownloadedFiles.size() +
-                    " RIR databases were downloaded out of " + this.listAllRIR.size() + ".");
+                    " RIR databases were downloaded out of " + listAllRIR.size() + ".");
         }
     }
 
     private void deleteFiles() {
         try {
-            this.listDownloadedFiles.stream().map((file) -> file.delete());
+            this.listDownloadedFiles.stream().forEach((file) -> file.delete());
             LOG.debug("Deleted temp files.");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             LOG.error("Problem deleting temp files.");
         }
     }

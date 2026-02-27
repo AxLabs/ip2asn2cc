@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class IPSubnet {
 
-    protected String address;
+    protected final String address;
 
-    public IPSubnet(String address) {
+    public IPSubnet(final String address) {
         this.address = address;
     }
 
@@ -15,10 +15,10 @@ public class IPSubnet {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IPv6Subnet that = (IPv6Subnet) o;
+        final IPv6Subnet that = (IPv6Subnet) o;
         return Objects.equals(address, that.address);
     }
 
