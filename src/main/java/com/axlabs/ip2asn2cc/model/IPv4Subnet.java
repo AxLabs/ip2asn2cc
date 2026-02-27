@@ -9,10 +9,16 @@ public class IPv4Subnet extends IPSubnet {
     // * amountOfAddresses: amount of addresses (e.g., 524288 -- which means /13)
 
     private Integer amountOfAddresses;
+    private String countryCode;
 
     public IPv4Subnet(String address, Integer amountOfAddresses) {
+        this(address, amountOfAddresses, null);
+    }
+
+    public IPv4Subnet(String address, Integer amountOfAddresses, String countryCode) {
         super(address);
         this.amountOfAddresses = amountOfAddresses;
+        this.countryCode = countryCode;
     }
 
     public Integer getAmountOfAddresses() {
@@ -27,6 +33,10 @@ public class IPv4Subnet extends IPSubnet {
             return this.address + "/" + (32 - (int) Math.ceil(Math.log(this.amountOfAddresses) / Math.log(2)));
         }
         return null;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
 }

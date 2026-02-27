@@ -87,6 +87,15 @@ public class Ip2Asn2Cc {
                 .orElse(false);
     }
 
+    public synchronized String getRIRCountryCode(String ipAddress) {
+        LOG.debug("Get RIR country code for: " + ipAddress);
+        return ofNullable(ipAddress)
+                .filter((address) -> validator.isValid(address))
+                .map((address) -> this.validator.isValidInet4Address(address) ?
+                        this.ipv4Checker.getRIRCountryCode(address) : this.ipv6Checker.getRIRCountryCode(address))
+                .orElse(null);
+    }
+
     private void parseAllCountryCodes(List<String> listCountryCode) {
 
         ExecutorService parserPool = Executors.newFixedThreadPool(6);

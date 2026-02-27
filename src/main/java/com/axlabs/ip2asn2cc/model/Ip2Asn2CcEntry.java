@@ -6,14 +6,17 @@ public class Ip2Asn2CcEntry {
 
     private String inetFamily;
 
+    private String countryCode;
+
     private String address;
 
     private int addresses;
 
     private String date;
 
-    public Ip2Asn2CcEntry(String registry, String inetFamily, String address, int addresses, String date) {
+    public Ip2Asn2CcEntry(String registry, String countryCode, String inetFamily, String address, int addresses, String date) {
         this.registry = registry;
+        this.countryCode = countryCode;
         this.inetFamily = inetFamily;
         this.address = address;
         this.addresses = addresses;
@@ -26,6 +29,10 @@ public class Ip2Asn2CcEntry {
 
     public String getInetFamily() {
         return inetFamily;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
     }
 
     public String getAddress() {
