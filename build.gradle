@@ -46,6 +46,29 @@ jacocoTestReport {
     }
 }
 
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.70
+            }
+        }
+        rule {
+            enabled = true
+            element = 'CLASS'
+            includes = ['com.axlabs.ip2asn2cc.model.*', 'com.axlabs.ip2asn2cc.checker.*', 'com.axlabs.ip2asn2cc.exception.*']
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.95
+            }
+        }
+    }
+}
+
+test.finalizedBy jacocoTestReport
+
+
 modifyPom {
     project {
         name 'IP2ASN2CC'
