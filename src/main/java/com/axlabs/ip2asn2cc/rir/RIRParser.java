@@ -22,17 +22,17 @@ public class RIRParser implements Runnable {
 
     private static final Logger LOG = LoggerFactory.getLogger(RIRParser.class);
 
-    private IPv4Checker ipv4Checker;
-    private IPv6Checker ipv6Checker;
-    private ASNChecker asnChecker;
-    private File fileToParse;
-    private List<String> listCountryCodeToLookFor;
+    private final IPv4Checker ipv4Checker;
+    private final IPv6Checker ipv6Checker;
+    private final ASNChecker asnChecker;
+    private final File fileToParse;
+    private final List<String> listCountryCodeToLookFor;
 
-    public RIRParser(IPv4Checker ipv4Checker,
-                     IPv6Checker ipv6Checker,
-                     ASNChecker asnChecker,
-                     File fileToParse,
-                     List<String> listCountryCodeToLookFor) {
+    public RIRParser(final IPv4Checker ipv4Checker,
+                     final IPv6Checker ipv6Checker,
+                     final ASNChecker asnChecker,
+                     final File fileToParse,
+                     final List<String> listCountryCodeToLookFor) {
         this.ipv4Checker = ipv4Checker;
         this.ipv6Checker = ipv6Checker;
         this.asnChecker = asnChecker;
@@ -44,7 +44,7 @@ public class RIRParser implements Runnable {
     public void run() {
         LOG.debug("Started parsing RIR file: " + this.fileToParse.getAbsolutePath());
 
-        List<Pattern> listPatternsToWatch = this.listCountryCodeToLookFor.stream()
+        final List<Pattern> listPatternsToWatch = this.listCountryCodeToLookFor.stream()
                 .map((countryCode) -> getPatternByCountry(countryCode))
                 .collect(Collectors.toList());
 
@@ -70,11 +70,11 @@ public class RIRParser implements Runnable {
                         });
             }).forEach((ip2Asn2CcEntry) -> {
                 if (ip2Asn2CcEntry.getInetFamily().equals("ipv4")) {
-                    IPv4Subnet ipv4Subnet = new IPv4Subnet(ip2Asn2CcEntry.getAddress(), ip2Asn2CcEntry.getAddresses(), ip2Asn2CcEntry.getCountryCode());
+                    final IPv4Subnet ipv4Subnet = new IPv4Subnet(ip2Asn2CcEntry.getAddress(), ip2Asn2CcEntry.getAddresses(), ip2Asn2CcEntry.getCountryCode());
                     this.ipv4Checker.addSubnet(ipv4Subnet);
                 }
                 if (ip2Asn2CcEntry.getInetFamily().equals("ipv6")) {
-                    IPv6Subnet ipv6Subnet = new IPv6Subnet(ip2Asn2CcEntry.getAddress(), ip2Asn2CcEntry.getAddresses(), ip2Asn2CcEntry.getCountryCode());
+                    final IPv6Subnet ipv6Subnet = new IPv6Subnet(ip2Asn2CcEntry.getAddress(), ip2Asn2CcEntry.getAddresses(), ip2Asn2CcEntry.getCountryCode());
                     this.ipv6Checker.addSubnet(ipv6Subnet);
                 }
                 if (ip2Asn2CcEntry.getInetFamily().equals("asn")) {
@@ -82,14 +82,14 @@ public class RIRParser implements Runnable {
                 }
             });
 
-        } catch (IOException e) {
+        } catch (final IOException e) {
             LOG.error("Error reading file ({}): ", this.fileToParse.getAbsolutePath(), e);
         }
 
         LOG.debug("Finished parsing RIR file: " + this.fileToParse.getAbsolutePath());
     }
 
-    private Pattern getPatternByCountry(String countryCode) {
+    private Pattern getPatternByCountry(final String countryCode) {
         // perform a pattern matching based on the following format:
         // https://www.apnic.net/about-APNIC/corporate-documents/documents/resource-guidelines/rir-statistics-exchange-format
         // http://www.regexplanet.com/advanced/java/index.html (tested with this)
