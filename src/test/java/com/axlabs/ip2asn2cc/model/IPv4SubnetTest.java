@@ -95,7 +95,8 @@ public class IPv4SubnetTest {
         // which is technically invalid but demonstrates graceful handling
         final String cidr = subnet.getCIDR();
         assertNotNull(cidr);
-        assertTrue(cidr.startsWith("192.168.0.0/"));
+        // Verify it starts with the expected address
+        assertEquals("192.168.0.0/33", cidr);
     }
 
     @Test
