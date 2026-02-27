@@ -34,6 +34,22 @@ public class IPv4Checker implements IPv4CheckerInterface {
     }
 
     @Override
+    public String getRIRCountryCode(String ipAddress) {
+        // if it's valid, check if the ipAddress is ipv4
+        if (this.validator.isValidInet4Address(ipAddress)) {
+            // if it's ipv4, check if it's in ANY ipv4 subnet range
+            for (IPv4Subnet ipv4Subnet : ipv4Subnets.keySet()) {
+                SubnetUtils subnetUtils = new SubnetUtils(ipv4Subnet.getCIDR());
+                subnetUtils.setInclusiveHostCount(true);
+                if (subnetUtils.getInfo().isInRange(ipAddress)) {
+                    return ipv4Subnet.getCountryCode();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public synchronized void addSubnet(IPv4Subnet ipv4Subnet) {
         this.ipv4Subnets.put(ipv4Subnet, ipv4Subnet);
     }

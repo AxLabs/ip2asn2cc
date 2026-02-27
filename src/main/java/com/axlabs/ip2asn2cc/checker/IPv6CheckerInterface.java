@@ -6,6 +6,8 @@ public interface IPv6CheckerInterface {
 
     boolean checkIfIsInRange(String ipAddress);
 
+    String getRIRCountryCode(String ipAddress);
+
     void addSubnet(IPv6Subnet ipSubnet);
 
 }
