@@ -63,6 +63,10 @@ public class ASNCheckerTest {
 
     @Test
     public void testAddASNWithEmptyString() {
+        // Note: While ASNs should typically be non-empty numeric strings,
+        // the ASNChecker does not validate input format. It's a simple
+        // set-based matcher that stores whatever is provided.
+        // Input validation should happen at a higher level before data reaches this checker.
         checker.addASN("");
         
         assertTrue(checker.checkIfMatches(""));

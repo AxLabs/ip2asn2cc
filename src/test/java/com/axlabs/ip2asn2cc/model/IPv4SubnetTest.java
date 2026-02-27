@@ -84,6 +84,17 @@ public class IPv4SubnetTest {
     }
 
     @Test
+    public void testGetCIDRWithNegativeAmountOfAddresses() {
+        // While negative values don't make sense, test that the method handles them gracefully
+        final IPv4Subnet subnet = new IPv4Subnet("192.168.0.0", -1);
+        
+        // The calculation will produce a result, but it's not meaningful
+        // The method doesn't validate input, which is acceptable for this internal model class
+        final String cidr = subnet.getCIDR();
+        assertNotNull(cidr); // Method returns a result even with invalid input
+    }
+
+    @Test
     public void testGetCIDRWithSingleAddress() {
         final IPv4Subnet subnet = new IPv4Subnet("192.168.0.1", 1);
         

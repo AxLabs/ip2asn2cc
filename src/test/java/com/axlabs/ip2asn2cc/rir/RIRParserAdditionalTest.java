@@ -175,8 +175,10 @@ public class RIRParserAdditionalTest {
     public void testParseLowercaseCountryCode() throws Exception {
         final Path rirFile = Files.createTempFile("rir-test-lowercase", ".txt");
         try {
-            // RIR files should have uppercase country codes, but test lowercase handling
-            // The parser converts to uppercase in the pattern, so lowercase in file won't match
+            // The parser converts country codes to uppercase in the pattern matching,
+            // so lowercase country codes in the RIR file will not match and will be ignored.
+            // This test verifies that the parser correctly rejects lowercase country codes,
+            // ensuring data integrity by only accepting properly formatted entries.
             Files.write(rirFile, Arrays.asList(
                     "arin|us|ipv4|8.8.8.0|256|20100101|allocated"
             ), StandardCharsets.UTF_8);

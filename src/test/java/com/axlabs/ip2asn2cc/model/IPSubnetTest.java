@@ -62,6 +62,15 @@ public class IPSubnetTest {
     }
 
     @Test
+    public void testEqualsWithNullAddress() {
+        final IPv6Subnet subnet1 = new IPv6Subnet(null, 32);
+        final IPv6Subnet subnet2 = new IPv6Subnet(null, 32);
+        
+        // Both have null addresses, should be equal
+        assertTrue(subnet1.equals(subnet2));
+    }
+
+    @Test
     public void testHashCodeConsistency() {
         final IPSubnet subnet = new IPSubnet("192.168.0.0");
         
