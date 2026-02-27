@@ -43,9 +43,13 @@ public class RIRParserAdditionalTest {
 
             new RIRParser(ipv4Checker, ipv6Checker, asnChecker, rirFile.toFile(), Arrays.asList("US", "CH")).run();
 
+            // Verify ASN entries were parsed
             assertTrue(asnChecker.checkIfMatches("3356"));
             assertTrue(asnChecker.checkIfMatches("13030"));
             assertFalse(asnChecker.checkIfMatches("12345"));
+            
+            // Verify that only ASN entries were parsed (no IPv4 ranges)
+            assertFalse(ipv4Checker.checkIfIsInRange("8.8.8.8"));
         } finally {
             Files.deleteIfExists(rirFile);
         }

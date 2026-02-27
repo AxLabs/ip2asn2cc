@@ -16,8 +16,8 @@
 
 ### Test Statistics
 
-- **Total Tests**: 94
-- **Passing Tests**: 92
+- **Total Tests**: 96
+- **Passing Tests**: 94
 - **Integration Tests (require network)**: 2 (currently skipped in CI)
 
 ## Running Tests
